@@ -1,0 +1,23 @@
+# Build output — do NOT publish compiled kernel binaries
+out/
+x64/
+Debug/
+Release/
+*.obj
+*.pdb
+*.sys
+*.cat
+*.lib
+*.exp
+*.ilk
+*.idb
+*.log
+*.tlog
+*.lastbuildstate
+*.metagen
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.aps

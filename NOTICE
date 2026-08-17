@@ -1,0 +1,12 @@
+mt7921-windows-monitor-research
+Copyright 2026 Ahmad Al-Ahmad (github.com/Obsidian-Strike)
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+RESEARCH / EDUCATIONAL SOFTWARE — kernel-mode.
+This project is a research experiment. It is kernel-mode code that, to load,
+requires weakening Windows security (test-signing; disabling Smart App Control /
+Memory Integrity) and may cause system instability (bug checks / "BSOD"). Build
+and run it only on hardware you own, on a non-production or virtual machine.
+Use only against networks and devices you own or are explicitly authorized to
+test. Provided "AS IS", without warranty; the authors accept no liability.

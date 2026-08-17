@@ -1,0 +1,89 @@
+; mt7921mon.inf - MT7921 Monitor Mode NDIS Lightweight Filter Driver
+; Requires test signing mode: bcdedit /set testsigning on
+
+[Version]
+Signature   = "$Windows NT$"
+Class       = NetService
+ClassGUID   = {4D36E974-E325-11CE-BFC1-08002BE10318}
+Provider    = %ManufacturerName%
+DriverVer   = 08/12/2025,1.0.0.0
+CatalogFile = mt7921mon.cat
+PnpLockdown = 1
+
+[Manufacturer]
+%ManufacturerName% = Standard, NTAMD64
+
+[Standard.NTAMD64]
+%ServiceDescription% = Install, ms_mt7921mon
+
+; ── Installation sections ─────────────────────────────────────────
+[Install]
+Characteristics = 0x40000              ; NCF_LW_FILTER
+NetCfgInstanceId = "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+AddReg = Inst_Ndi
+CopyFiles = Driver_CopyFiles
+
+[Install.NTAMD64]
+Characteristics = 0x40000
+NetCfgInstanceId = "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+AddReg = Inst_Ndi
+CopyFiles = Driver_CopyFiles
+
+[Install.NTAMD64.Services]
+AddService = mt7921mon,, mt7921mon_Service_Inst
+
+[Install.Services]
+AddService = mt7921mon,, mt7921mon_Service_Inst
+
+[Driver_CopyFiles]
+mt7921mon.sys,,,2
+
+[Install.Remove]
+DelReg = Inst_Ndi
+
+[Install.NTAMD64.Remove]
+DelReg = Inst_Ndi
+
+[Install.Remove.Services]
+DelService = mt7921mon, 2
+
+[Install.NTAMD64.Remove.Services]
+DelService = mt7921mon, 2
+
+; ── NDI registry entries ──────────────────────────────────────────
+[Inst_Ndi]
+HKR, Ndi,            Service,      0,          "mt7921mon"
+HKR, Ndi,            CoServices,   0x00010000, "mt7921mon"
+HKR, Ndi,            HelpText,     0,          %HelpText%
+HKR, Ndi,            FilterClass,  0,          "ms_implementation"
+HKR, Ndi,            FilterType,   0x00010001, 0x00000002   ; NDIS_LWF modifying
+HKR, Ndi,            FilterRunType,0x00010001, 0x00000002   ; Optional (never breaks datapath if load fails)
+HKR, Ndi\Interfaces, UpperRange,   0,          "noupper"
+HKR, Ndi\Interfaces, LowerRange,   0,          "nolower"
+HKR, Ndi\Interfaces, FilterMediaTypes, 0,      "wlan"
+
+; ── Service configuration ─────────────────────────────────────────
+[mt7921mon_Service_Inst]
+DisplayName    = %ServiceDescription%
+ServiceType    = 1                   ; SERVICE_KERNEL_DRIVER
+StartType      = 1                   ; SERVICE_SYSTEM_START (load at boot with NDIS)
+ErrorControl   = 1                   ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\mt7921mon.sys
+LoadOrderGroup = NDIS
+
+; ── File copy ─────────────────────────────────────────────────────
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+mt7921mon.sys = 1,,
+
+[DestinationDirs]
+DefaultDestDir = 12        ; %windir%\system32\drivers
+
+; ── Strings ───────────────────────────────────────────────────────
+[Strings]
+ManufacturerName   = "AirStrike"
+ServiceDescription = "MT7921 Monitor Mode Filter"
+HelpText           = "Enables 802.11 monitor mode on MediaTek MT7921 adapters"
+DiskName           = "AirStrike Driver Disk"
